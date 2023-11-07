@@ -103,6 +103,17 @@ CampoMinado.prototype.imprimirTabuleiro = function () {
     console.log('- Digite "-2 -2" para reiniciar o jogo');
 };
 
+CampoMinado.prototype.validarCoordenadas = function (x, y) {
+    const regex = /^[0-9]+$/;
+    if (!regex.test(x) || !regex.test(y)) {
+        throw new Error('Coordenadas inválidas');
+    }
+    if (x < 0 || x >= this.linhas || y < 0 || y >= this.colunas) {
+        throw new Error('Coordenadas inválidas');
+    }
+};
+
+
 // CampoMinado.prototype.jogarComCoordenadas = function (coordenadas, rl, cm) {
 //     const [x, y] = coordenadas;
 //     if (this.tabuleiro[x][y] >= 1 || this.tabuleiro[x][y] === 'X') {
