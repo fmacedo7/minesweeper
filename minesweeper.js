@@ -82,19 +82,16 @@ CampoMinado.prototype.revelarTabuleiro = function () {
 };
 
 CampoMinado.prototype.imprimirTabuleiro = function () {
-    let colunasIndices = "  ";
-    for (let i = 0; i < this.colunas; i++) {
-        colunasIndices += `${i} `;
-    }
-    console.log(colunasIndices);
+    const linhaSuperior = `  ${Array.from(Array(this.colunas).keys()).join(' ')}`;
+    console.log(linhaSuperior);
 
     for (let i = 0; i < this.linhas; i++) {
-        let row = `${i} `;
+        let row = `${i}|`;
         for (let j = 0; j < this.colunas; j++) {
             if (this.tabuleiro[i][j] === -1) {
-                row += '0 ';
+                row += '0|';
             } else {
-                row += this.tabuleiro[i][j] + ' ';
+                row += this.tabuleiro[i][j] + '|';
             }
         }
         console.log(row);
@@ -112,7 +109,6 @@ CampoMinado.prototype.validarCoordenadas = function (x, y) {
         throw new Error('Coordenadas inválidas');
     }
 };
-
 
 // CampoMinado.prototype.jogarComCoordenadas = function (coordenadas, rl, cm) {
 //     const [x, y] = coordenadas;
@@ -139,9 +135,9 @@ CampoMinado.prototype.validarCoordenadas = function (x, y) {
 
 function menuDificuldade() {
     console.log('Escolha a dificuldade:');
-    console.log('1. Fácil (5x5, 5 minas)');
-    console.log('2. Médio (8x8, 15 minas)');
-    console.log('3. Difícil (10x10, 25 minas)');
+    console.log('1. Fácil (8x8, 10 minas)');
+    console.log('2. Médio (10x16, 30 minas)');
+    console.log('3. Difícil (24x24, 100 minas)');
     console.log('0. Sair')
 };
 
