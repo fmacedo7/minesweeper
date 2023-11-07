@@ -1,33 +1,43 @@
-const { test } = require("jest-circus");
+// const { test } = require("jest-circus");
 const { CampoMinado } = require("../minesweeper");
 
-test("Verifica se a função contarMinasVizinhas conta as minas vizinhas corretamente", () => {
-    const cm = new CampoMinado(8, 8, 0); // Tamanho 5x5 com 5 minas
+test("Verifica se a função de contagem de minas vizinhas está correta", () => {
+    const cm = new CampoMinado(3, 3, 3);
     cm.tabuleiro = [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
+        [-1, 0, 0],
+        [0, -1, 0],
+        [0, 0, -1]
     ];
 
-    const result1 = cm.contarMinasVizinhas(0, 0); // Deve retornar 0
-    const result2 = cm.contarMinasVizinhas(0, 1); // Deve retornar 3
-    const result3 = cm.contarMinasVizinhas(0, 4); // Deve retornar 0
-    const result4 = cm.contarMinasVizinhas(0, 6); // Deve retornar 0
-    const result5 = cm.contarMinasVizinhas(0, 7); // Deve retornar 0
-
-    expect(result1).toBe(0);
-    expect(result2).toBe(0);
-    expect(result3).toBe(0);
-    expect(result3).toBe(0);
-    expect(result4).toBe(0);
-    expect(result5).toBe(0);
+    expect(cm.contarMinasVizinhas(0, 0)).toBe(2);
+    expect(cm.contarMinasVizinhas(0, 1)).toBe(2);
+    expect(cm.contarMinasVizinhas(0, 2)).toBe(1);
+    expect(cm.contarMinasVizinhas(1, 0)).toBe(2);
+    expect(cm.contarMinasVizinhas(1, 1)).toBe(3);
+    expect(cm.contarMinasVizinhas(1, 2)).toBe(2);
+    expect(cm.contarMinasVizinhas(2, 0)).toBe(1);
+    expect(cm.contarMinasVizinhas(2, 1)).toBe(2);
+    expect(cm.contarMinasVizinhas(2, 2)).toBe(2);
 });
 
-test('', () => {
-    
-})
+test("Verifica contagem de minas", () => {
+    const cm = new CampoMinado(3, 3, 3);
+    cm.tabuleiro = [
+        [-1, -1, -1],
+        [-1, 0, -1],
+        [-1, -1, -1]
+    ];
+
+    expect(cm.contarMinasVizinhas(1, 1)).toBe(8);
+});
+
+test("Verifica contagem de minas", () => {
+    const cm = new CampoMinado(3, 3, 3);
+    cm.tabuleiro = [
+        [-1, -1, -1],
+        [-1, -1, -1],
+        [-1, -1, -1]
+    ];
+
+    expect(cm.contarMinasVizinhas(1, 1)).toBe(9);
+});
