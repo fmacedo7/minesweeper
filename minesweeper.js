@@ -22,6 +22,11 @@ CampoMinado.prototype.gerarMinas = function () {
 };
 
 CampoMinado.prototype.jogar = function (x, y, rl, cm) {
+    if (this.tabuleiro[x][y] === '?'){
+        cm.colocarBandeiras(x, y);
+        this.imprimirTabuleiro();
+        return
+    }
     if (x === -1 && y === -1) {
         console.log('Saindo do jogo. Até logo!');
         rl.close();
@@ -88,16 +93,21 @@ CampoMinado.prototype.imprimirTabuleiro = function () {
     for (let i = 0; i < this.linhas; i++) {
         let row = `${i}|`;
         for (let j = 0; j < this.colunas; j++) {
+            let cellValue = '';
             if (this.tabuleiro[i][j] === -1) {
-                row += '0|';
+                cellValue = '0';
+            } else if (this.tabuleiro[i][j] === '?') {
+                cellValue = '?';
             } else {
-                row += this.tabuleiro[i][j] + '|';
+                cellValue = this.tabuleiro[i][j];
             }
+            row += cellValue + '|';
         }
         console.log(row);
     }
     console.log('- Digite "-1 -1" para sair do jogo');
     console.log('- Digite "-2 -2" para reiniciar o jogo');
+    console.log('- Digite "b" para inserir uma bandeira');
 };
 
 CampoMinado.prototype.validarCoordenadas = function (x, y) {
@@ -110,28 +120,17 @@ CampoMinado.prototype.validarCoordenadas = function (x, y) {
     }
 };
 
-// CampoMinado.prototype.jogarComCoordenadas = function (coordenadas, rl, cm) {
-//     const [x, y] = coordenadas;
-//     if (this.tabuleiro[x][y] >= 1 || this.tabuleiro[x][y] === 'X') {
-//         console.log('Essa célula já está aberta!');
-//         return;
-//     }
-//     if (this.tabuleiro[x][y] === -1) {
-//         console.log('Você encontrou uma mina! Fim de jogo!');
-//         this.revelarTabuleiro();
-//         this.jogoContinua = false;
-//         rl.close();
-//     } else {
-//         const numMinasVizinhas = this.contarMinasVizinhas(x, y);
-//         this.tabuleiro[x][y] = numMinasVizinhas || 'X';
-//         this.jogadasRestantes--;
-//         this.imprimirTabuleiro();
-//         if (this.jogadasRestantes === 0) {
-//             console.log('Parabéns! Você venceu o jogo!');
-//             this.jogoContinua = false;
-//         }
-//     }
-// };
+CampoMinado.prototype.colocarBandeiras = function (x, y, rl, cm) {
+    if (this.tabuleiro[x][y] >= 1 || this.tabuleiro[x][y] === 'X') {
+        console.log('Essa célula já está aberta!');
+        return;
+    }
+    if (this.tabuleiro[x][y] === '0') {
+        this.tabuleiro[x][y] = '?';
+    } else if (this.tabuleiro[x][y] === '?') {
+        this.tabuleiro[x][y] = '0'; // Remove a bandeira se já estiver presente
+    }
+};
 
 function menuDificuldade() {
     console.log('Escolha a dificuldade:');
@@ -183,21 +182,28 @@ function iniciarJogo() {
 };
 
 function jogar(rl, cm) {
+    
     if (cm.jogoContinua) {
         rl.question('Digite a linha e a coluna que deseja jogar (exemplo: 0 0): ', (entrada) => {
             const [x, y] = entrada.split(' ').map(coord => parseInt(coord));
             if (x === -2 && y === -2) {
                 console.log('Reiniciando o jogo...');
-                setTimeout(() => iniciarJogo(), 0); //evita a duplicação da entrada
+                setTimeout(() => iniciarJogo(), 0); // Evita a duplicação da entrada
                 return;
             } else if (x === -1 && y === -1) {
                 console.log('Saindo do jogo. Até mais!');
                 rl.close();
                 return;
+            } else if (entrada === 'b') {
+                rl.question('Digite a linha e a coluna para colocar a bandeira (exemplo: 0 0): ', (coordBandeira) => {
+                    const [x, y] = coordBandeira.split(' ').map(coord => parseInt(coord));
+                    cm.colocarBandeiras(x, y, rl, cm);
+                    setTimeout(() => jogar(rl, cm), 0); // Evita a duplicação da entrada
+                });
             } else {
                 cm.jogar(x, y, rl, cm);
                 if (cm.jogoContinua) {
-                    setTimeout(() => jogar(rl, cm), 0); //evitar a duplicação da entrada
+                    setTimeout(() => jogar(rl, cm), 0); // Evita a duplicação da entrada
                 } else {
                     rl.close();
                 }
